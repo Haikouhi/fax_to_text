@@ -1,5 +1,7 @@
 from O365 import Account
 
+
+#### Get File ---- Write ----> Storage ####
 #### Connexion API Office Rest 365 ####
 def AccountO365_Connexion():
     credentials = ('client_id', 'client_secret')
@@ -10,8 +12,6 @@ def AccountO365_Connexion():
     m.subject = 'Testing!'
     m.body = "Coucou on dirait que ça marche."
     m.send()
-
-#### Get File ---- Write ----> Storage ####
 
 #### OCR ####
 
