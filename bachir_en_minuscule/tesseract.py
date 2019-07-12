@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from PIL import Image
 from io import BytesIO
+from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
+from msrest.authentication import CognitiveServicesCredentials
 
 # Replace <Subscription Key> with your valid subscription key.
 subscription_key = "3bb1e04945b14735ba122d3b0d946fd1"
@@ -35,12 +37,32 @@ analysis = response.json()
 # Extract the word bounding boxes and text.
 line_infos = [region["lines"] for region in analysis["regions"]]
 word_infos = []
+text_only = []
 for line in line_infos:
     for word_metadata in line:
         for word_info in word_metadata["words"]:
             word_infos.append(word_info)
-            print(word_info["text"])
-print(word_infos)
+            text_only.append(word_info["text"])
+
+print(text_only)
+
+# Text Analytics
+credentials = CognitiveServicesCredentials(subscription_key)
+text_analytics_url = "https://westcentralus.api.cognitive.microsoft.com/"
+text_analytics = TextAnalyticsClient(endpoint=text_analytics_url, credentials=credentials)
+
+documents = text_only[:]
+response = text_analytics.entities(documents=documents)
+
+for document in response.documents:
+    print("Document Id: ", document.id)
+    print("\tKey Entities:")
+    for entity in document.entities:
+        print("\t\t", "NAME: ", entity.name, "\tType: ", entity.type, "\tSub-type: ", entity.sub_type)
+        for match in entity.matches:
+            print("\t\t\tOffset: ", match.offset, "\tLength: ", match.length, "\tScore: ",
+                  "{:.2f}".format(match.entity_type_score))
+
 # Display the image and overlay it with the extracted text.
 plt.figure(figsize=(5, 5))
 image = Image.open(BytesIO(requests.get(image_url).content))

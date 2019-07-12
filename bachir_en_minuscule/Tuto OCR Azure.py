@@ -1,9 +1,11 @@
-import requests
+from io import BytesIO
+
 # If you are using a Jupyter notebook, uncomment the following line.
 # %matplotlib inline
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import requests
 from PIL import Image
-from io import BytesIO
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
 
@@ -53,15 +55,15 @@ text_analytics_url = "https://westcentralus.api.cognitive.microsoft.com/"
 text_analytics = TextAnalyticsClient(endpoint=text_analytics_url, credentials=credentials)
 
 # Reconnaissance d'identité
-documents = "bon-de-commande.jpg"
-
+"""documents = analysis
 response = text_analytics.entities(documents=documents)
 
 for document in response.documents:
     print("Document Id: ", document.id)
     print("\tKey Entities:")
     for entity in document.entities:
-        print("\t\t", "NAME: ",entity.name, "\tType: ", entity.type, "\tSub-type: ", entity.sub_type)
+        print("\t\t", "NAME: ", entity.name, "\tType: ", entity.type, "\tSub-type: ", entity.sub_type)
         for match in entity.matches:
             print("\t\t\tOffset: ", match.offset, "\tLength: ", match.length, "\tScore: ",
                   "{:.2f}".format(match.entity_type_score))
+"""
