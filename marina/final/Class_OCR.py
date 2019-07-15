@@ -42,7 +42,9 @@ class Ocr:
             dico = {'no_commande': [],
                     'no_client': [],
                     'mails' : [],
-                    'tel': []}
+                    'tel': [],
+                    'no_ref': ""
+                   }
 
             # regex for output extraction
             mails = re.search(r"([a-zA-Z][a-zA-Z0-9-._]*@[a-zA-Z]+.[a-zA-Z]{1,4})", str(text))
@@ -57,6 +59,9 @@ class Ocr:
             no_client = re.search(r"([A-Z]\d{6})", text)
             if no_client:
                 dico['no_client'].append(no_client.group())
+            no_ref = re.findall(r"(\s\d{6})", text)
+            if no_ref:
+                dico['no_ref'] = no_ref
 
             json.dump(dico, file, indent=4, ensure_ascii=False)
 
