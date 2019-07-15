@@ -80,6 +80,10 @@ def upload_file():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
+    image_url = request.url
+    print("image_url = ", image_url)
+    my_ocr = OCR.Ocr(subscription_key, ocr_url, "'" + image_url + "'")
+    my_ocr.ocr_system()
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 #### Interpret order -----> Customer{}, Articles{} ####
@@ -94,5 +98,4 @@ def uploaded_file(filename):
 
 
 if __name__ == '__main__':
-    my_ocr = OCR.Ocr(subscription_key, ocr_url)
-    my_ocr.ocr_system()
+    app.run()
