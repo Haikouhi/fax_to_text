@@ -1,4 +1,3 @@
-# Library Import
 import Class_OCR as OCR
 import os
 from flask import Flask, flash, request, redirect, url_for
@@ -21,7 +20,7 @@ from flask import send_from_directory
 """
 #### Config ####
 # Replace <Subscription Key> with your valid subscription key.
-subscription_key = ""
+subscription_key = "your key here"
 assert subscription_key
 # You must use the same region in your REST call as you used to get your
 # subscription keys. For example, if you got your subscription keys from
@@ -39,11 +38,15 @@ IMG_URL = None
 
 #### Flask server ####
 UPLOAD_FOLDER = os.getcwd()
+print("UPLOAD_FOLDER= ", UPLOAD_FOLDER)
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+#DOWNLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + '/downloads/'
+DOWNLOAD_FOLDER = os.path.join(UPLOAD_FOLDER, 'static')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["DEBUG"] = True
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -66,7 +69,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
+            return redirect(url_for('getResult',
                                     filename=filename))
     return '''
     <!doctype html>
@@ -80,11 +83,41 @@ def upload_file():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     image_url = request.url
     print("image_url = ", image_url)
-    my_ocr = OCR.Ocr(subscription_key, ocr_url)
+    my_ocr = OCR.Ocr(subscription_key, ocr_url, image_url)
     my_ocr.ocr_system()
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    
+@app.route('/uploads/<filename>/result')
+def getResult(filename):
+    image_url = request.url
+    image_url = image_url.replace('/result', '')
+    print("image_url 2 = ", image_url)
+    my_ocr = OCR.Ocr(subscription_key, ocr_url, image_url)
+    my_ocr.ocr_system()
+    print("my_ocr.dico = ", my_ocr.dico)
+    print("my_ocr.text = ", my_ocr.text)
+    return my_ocr.dico
+
+
+# TODO : download method in order to get text.txt file from uploaded image
+"""
+@app.route("/uploads/<filename>/download")
+def download_file(filename):
+    image_url = request.url
+    image_url = image_url.replace('/download', '')
+    print("image_url 3 = ", image_url)
+    my_ocr = OCR.Ocr(subscription_key, ocr_url, image_url)
+    my_ocr.ocr_system()
+    #output_stream = open(app.config['DOWNLOAD_FOLDER'] + filename, 'wb')
+    #output.write(output_stream)
+    print("my_ocr.text = ", my_ocr.text)
+    with open(app.config['DOWNLOAD_FOLDER'] + "TEST.txt", 'wb') as f:
+        f.write(my_ocr.text)
+        return send_file(f, as_attachement=True)
+    #return send_file(f, as_attachment=True) 
+"""
 
 #### Interpret order -----> Customer{}, Articles{} ####
 
@@ -97,5 +130,8 @@ def uploaded_file(filename):
 #### Export to Order Systeme ####
 
 
+# NOT USE app.run with HEROKU !!!
+"""
 if __name__ == '__main__':
     app.run()
+"""
