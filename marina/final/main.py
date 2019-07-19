@@ -73,12 +73,14 @@ def upload_file():
                                     filename=filename))
     return '''
     <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
+    <title><center>Fexte</center></title>
+    <h1><center>Fexte</center></h1>
+    </br>
+    <p><center><form method=post enctype=multipart/form-data>
+      Upload new File :
       <input type=file name=file>
       <input type=submit value=Upload>
-    </form>
+    </form> </center></p>
     '''
 
 @app.route('/uploads/<filename>')
