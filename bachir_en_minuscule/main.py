@@ -1,16 +1,16 @@
+# -*- coding: utf-8 -*-
 # Library Import
 import requests
 import time
 from O365 import Account
 from bachir_en_minuscule.myOcr import Ocr
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+
 from matplotlib.patches import Polygon
-from PIL import Image
-from io import BytesIO
+
 from azure.cognitiveservices.language.textanalytics import TextAnalyticsClient
 from msrest.authentication import CognitiveServicesCredentials
-
+from pprint import pprint
+from bachir_en_minuscule.myTextAnalyze import Analyze_Text
 #### Get File ---- Write ----> Storage ####
 
 #### Connect to API Office Rest 365 ####
@@ -26,7 +26,7 @@ from msrest.authentication import CognitiveServicesCredentials
 """
 #### Config ####
 # Replace <Subscription Key> with your valid subscription key.
-subscription_key = "3bb1e04945b14735ba122d3b0d946fd1"
+subscription_key = "f7c364054f6740d385e57fb37df8e34c"
 assert subscription_key
 # You must use the same region in your REST call as you used to get your
 # subscription keys. For example, if you got your subscription keys from
@@ -34,11 +34,9 @@ assert subscription_key
  # Free trial subscription keys are generated in the "westus" region.
 # If you use a free trial subscription key, you shouldn't need to change
 # this region.
-vision_base_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/"
+vision_base_url = "https://exakisfexte.cognitiveservices.azure.com//vision/v2.0/"
 
 ocr_url = vision_base_url + "ocr"
-
-# Set image_url to the URL of an image that you want to analyze.
 
 #### Interpret order -----> Customer{}, Articles{} ####
 

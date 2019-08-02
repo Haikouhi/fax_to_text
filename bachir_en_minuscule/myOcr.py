@@ -1,10 +1,14 @@
 import requests
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+from PIL import Image
+from io import BytesIO
 
 class Ocr:
     def __init__(self, subscription_key, ocr_url):
+        # Set image_url to the URL of an image that you want to analyze.
+        self.image_url = "https://cdn.discordapp.com/attachments/595952680330068003/600263216593109003/test_bon_de_commande1.jpg"
 
-        self.image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/" + \
-                "Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png"
         self.headers = {'Ocp-Apim-Subscription-Key': subscription_key}
         self.params = {'language': 'unk', 'detectOrientation': 'true'}
         self.data = {'url': self.image_url}
